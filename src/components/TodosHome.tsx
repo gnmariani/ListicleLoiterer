@@ -1,6 +1,7 @@
 import { HiOutlineClipboardDocumentCheck as Icon } from "react-icons/hi2";
 import NewTodoForm from "./NewTodoForm";
-import { useState } from "react";
+import { useTodos } from "@/hooks/useTodos";
+import { requestCreateTodo, Todo } from "@/lib/todos-lib";
 
 const Header = () => (
   <header className="flex flex-row items-center space-x-2">
@@ -10,11 +11,30 @@ const Header = () => (
 );
 
 export const TodosHome = () => {
-  const [task, setTask] = useState<FormDataEntryValue | null>("");
+  const { todos, mutate } = useTodos();
+
+  const addNewTask = async (newTask: FormDataEntryValue | null) => {
+    if (newTask && typeof newTask === "string") {
+      const task: Todo = {
+        id: "",
+        title: newTask,
+        completed: false,
+        priority: 0, //TODO: Should priority organize order of todo's?
+      };
+
+      await requestCreateTodo(task);
+      mutate([...todos, task], {
+        optimisticData: [...todos, task],
+        rollbackOnError: true,
+        populateCache: true,
+        revalidate: false,
+      });
+    }
+  };
   return (
     <div className="space-y-6">
       <Header />
-      <NewTodoForm newTask={(task) => setTask(task)} />
+      <NewTodoForm newTask={addNewTask} />
     </div>
   );
 };
