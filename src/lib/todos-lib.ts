@@ -5,7 +5,7 @@ export type Todo = {
   priority: number;
 };
 
-type ApiResponse<T> = {
+export type ApiResponse<T> = {
   error: any | null;
   data: T | null;
   status: number;
