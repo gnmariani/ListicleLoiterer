@@ -1,7 +1,7 @@
 import { HiOutlineClipboardDocumentCheck as Icon } from "react-icons/hi2";
 import NewTodoForm from "./NewTodoForm";
-import { useOptimisticTodos, useTodos } from "@/hooks/useTodos";
-import { requestCreateTodo, type Todo } from "@/lib/todos-lib";
+import { useTodos } from "@/hooks/useTodos";
+import { requestCreateTodo, Todo } from "@/lib/todos-lib";
 
 const Header = () => (
   <header className="flex flex-row items-center space-x-2">
@@ -11,10 +11,9 @@ const Header = () => (
 );
 
 export const TodosHome = () => {
-  const { todos } = useTodos();
-  const { trigger } = useOptimisticTodos();
+  const { todos, mutate } = useTodos();
 
-  const addNewTask = (newTask: FormDataEntryValue | null) => {
+  const addNewTask = async (newTask: FormDataEntryValue | null) => {
     if (newTask && typeof newTask === "string") {
       const task: Todo = {
         id: "",
@@ -23,13 +22,12 @@ export const TodosHome = () => {
         priority: 0, //TODO: Should priority organize order of todo's?
       };
 
-      // send a request to the API to update the data
-      // update the local data immediately and revalidate (refetch)
-      trigger(requestCreateTodo(task), {
+      await requestCreateTodo(task);
+      mutate([...todos, task], {
         optimisticData: [...todos, task],
+        rollbackOnError: true,
         populateCache: true,
         revalidate: false,
-        rollbackOnError: true,
       });
     }
   };
