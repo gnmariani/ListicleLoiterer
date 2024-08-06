@@ -29,6 +29,7 @@ export const NewTodoForm = ({
           id="task"
           name="task"
           type="text"
+          required
           placeholder="Add a task"
           className="w-full rounded border border-stone-200 bg-white px-4 py-3 text-base transition-opacity focus:border-red-300 focus:ring-1 focus:ring-red-300 focus-visible:outline-none disabled:opacity-50"
         />
