@@ -1,7 +1,8 @@
 import { HiOutlineClipboardDocumentCheck as Icon } from "react-icons/hi2";
 import NewTodoForm from "./NewTodoForm";
 import { useTodos } from "@/hooks/useTodos";
-import { requestCreateTodo, Todo } from "@/lib/todos-lib";
+import { requestCreateTodo, requestUpdateTodo, Todo } from "@/lib/todos-lib";
+import { TodosList } from "./TodosList";
 
 const Header = () => (
   <header className="flex flex-row items-center space-x-2">
@@ -31,10 +32,17 @@ export const TodosHome = () => {
       });
     }
   };
+
+  const updateTask = async (task: Todo) => {
+    await requestUpdateTodo(task);
+    mutate([...todos, task]);
+  };
+
   return (
     <div className="space-y-6">
       <Header />
       <NewTodoForm newTask={addNewTask} />
+      <TodosList todos={todos} updateTask={updateTask} />
     </div>
   );
 };
