@@ -33,12 +33,10 @@ export const TodosHome = () => {
       });
     }
   };
-  console.log(todos);
   return (
     <div className="space-y-6">
       <Header />
       <NewTodoForm newTask={addNewTask} />
-      <p>{todos.find((x) => x !== undefined)?.title}</p>
     </div>
   );
 };

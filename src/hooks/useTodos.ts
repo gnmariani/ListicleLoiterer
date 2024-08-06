@@ -1,5 +1,5 @@
 import { fetcher } from "@/lib/fetcher";
-import { ApiResponse, type Todo } from "@/lib/todos-lib";
+import { type ApiResponse, type Todo } from "@/lib/todos-lib";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
@@ -15,6 +15,7 @@ export const useTodos = () => {
   };
 };
 
+//https://github.com/vercel/swr/discussions/2774
 export const useOptimisticTodos = () => {
   const { trigger } = useSWRMutation<
     Todo[],
