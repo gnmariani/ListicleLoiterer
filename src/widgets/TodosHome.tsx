@@ -9,8 +9,15 @@ import {
 import { TodosList } from "@/components/TodoForm/TodosList";
 import { Header } from "@/components/Header";
 
+import { useState } from "react";
+import { Banner } from "@/components/banner";
+
+const ERROR_MESSAGE = "An error occured.";
+
 export const TodosHome = () => {
-  const { todos, mutate } = useTodos();
+  const { todos, mutate, isError } = useTodos();
+  const [displayBanner, setDisplayBanner] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(ERROR_MESSAGE);
 
   const addNewTask = async (newTask: FormDataEntryValue | null) => {
     if (newTask && typeof newTask === "string") {
@@ -21,11 +28,22 @@ export const TodosHome = () => {
         priority: 0, //TODO: Should priority organize order of todo's?
       };
 
-      await requestCreateTodo(task);
-      mutate([...todos, task], {
-        optimisticData: [...todos, task],
-        rollbackOnError: true,
-      });
+      try {
+        const res = await requestCreateTodo(task);
+        if (res.status !== 200) {
+          setErrorMessage(res.error.message);
+          throw new Error(res.error.message);
+        }
+        mutate([...todos, task], {
+          optimisticData: [...todos, task],
+          rollbackOnError: true,
+        });
+        // Reset on success
+        setDisplayBanner(false);
+        setErrorMessage(ERROR_MESSAGE);
+      } catch (error) {
+        setDisplayBanner(true);
+      }
     }
   };
 
@@ -47,6 +65,13 @@ export const TodosHome = () => {
     /*TODO: the gap or space classes are not working (>_<) */
     <div className="grid [row-gap:1.25rem]">
       <Header />
+      {isError || displayBanner ? (
+        <Banner
+          title="Error"
+          message={errorMessage}
+          onClose={setDisplayBanner}
+        />
+      ) : null}
       <NewTodoForm newTask={addNewTask} />
       <TodosList
         todos={todos}

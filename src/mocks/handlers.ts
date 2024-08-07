@@ -14,11 +14,16 @@ export const handlers = [
       title: string;
     };
 
-    const newTodo = addTodo({
-      title,
-    });
-
-    return res(ctx.json(newTodo));
+    try {
+      const newTodo = addTodo({
+        title,
+      });
+      return res(ctx.json(newTodo));
+    } catch (error) {
+      if (error instanceof Error) {
+        return res(ctx.status(500), ctx.json({ message: error.message }));
+      }
+    }
   }),
 
   // PUT /todos/:id
