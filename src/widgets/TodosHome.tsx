@@ -1,15 +1,8 @@
-import { HiOutlineClipboardDocumentCheck as Icon } from "react-icons/hi2";
-import NewTodoForm from "./NewTodoForm";
+import NewTodoForm from "@/components/TodoForm/NewTodoForm";
 import { useTodos } from "@/hooks/useTodos";
 import { requestCreateTodo, requestUpdateTodo, Todo } from "@/lib/todos-lib";
-import { TodosList } from "./TodosList";
-
-const Header = () => (
-  <header className="flex flex-row items-center space-x-2">
-    <Icon className="h-10 w-10" />
-    <h1 className="font-serif text-3xl font-medium">To-Do List</h1>
-  </header>
-);
+import { TodosList } from "@/components/TodoForm/TodosList";
+import { Header } from "@/components/Header";
 
 export const TodosHome = () => {
   const { todos, mutate } = useTodos();

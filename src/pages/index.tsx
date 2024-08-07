@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import TodosHome from "@/components/TodosHome";
+import TodosHome from "@/widgets/TodosHome";
 
 export const Home = () => {
   return (
