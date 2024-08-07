@@ -1,6 +1,11 @@
 import NewTodoForm from "@/components/TodoForm/NewTodoForm";
 import { useTodos } from "@/hooks/useTodos";
-import { requestCreateTodo, requestUpdateTodo, Todo } from "@/lib/todos-lib";
+import {
+  requestCreateTodo,
+  requestDeleteTodo,
+  requestUpdateTodo,
+  Todo,
+} from "@/lib/todos-lib";
 import { TodosList } from "@/components/TodoForm/TodosList";
 import { Header } from "@/components/Header";
 
@@ -20,8 +25,6 @@ export const TodosHome = () => {
       mutate([...todos, task], {
         optimisticData: [...todos, task],
         rollbackOnError: true,
-        populateCache: true,
-        revalidate: false,
       });
     }
   };
@@ -31,11 +34,25 @@ export const TodosHome = () => {
     mutate([...todos, task]);
   };
 
+  const deleteTask = async (task: Pick<Todo, "id">) => {
+    await requestDeleteTodo(task.id);
+    const updatedList = todos.filter((todo) => todo.id !== task.id);
+    mutate(updatedList, {
+      optimisticData: updatedList,
+      rollbackOnError: true,
+    });
+  };
+
   return (
-    <div className="space-y-6">
+    /*TODO: the gap or space classes are not working (>_<) */
+    <div className="grid [row-gap:1.25rem]">
       <Header />
       <NewTodoForm newTask={addNewTask} />
-      <TodosList todos={todos} updateTask={updateTask} />
+      <TodosList
+        todos={todos}
+        updateTodo={updateTask}
+        deleteTodo={deleteTask}
+      />
     </div>
   );
 };

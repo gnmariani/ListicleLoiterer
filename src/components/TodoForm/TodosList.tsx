@@ -4,10 +4,11 @@ import { TodoItem } from "./TodoItem";
 
 type TodoList = {
   todos: Todo[];
-  updateTask: (task: Todo) => void;
+  updateTodo: (task: Todo) => void;
+  deleteTodo: (task: Todo) => void;
 };
 
-export const TodosList = ({ todos, updateTask }: TodoList) => {
+export const TodosList = ({ todos, updateTodo, deleteTodo }: TodoList) => {
   const incomplete = todos.filter((todo) => !todo.completed);
   const complete = todos.filter((todo) => todo.completed);
 
@@ -16,7 +17,12 @@ export const TodosList = ({ todos, updateTask }: TodoList) => {
       {incomplete.length > 0 ? (
         <TodoSection title="Incomplete" count={incomplete.length.toString()}>
           {incomplete.map((todo) => (
-            <TodoItem key={todo.id} todo={todo} update={updateTask} />
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              updateTodo={updateTodo}
+              deleteTodo={deleteTodo}
+            />
           ))}
         </TodoSection>
       ) : null}
@@ -24,7 +30,12 @@ export const TodosList = ({ todos, updateTask }: TodoList) => {
       {complete.length > 0 ? (
         <TodoSection title="Completed" count={complete.length.toString()}>
           {complete.map((todo) => (
-            <TodoItem key={todo.id} todo={todo} update={updateTask} />
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              updateTodo={updateTodo}
+              deleteTodo={deleteTodo}
+            />
           ))}
         </TodoSection>
       ) : null}
