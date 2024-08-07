@@ -30,7 +30,7 @@ export const TodoItem = ({ todo, updateTodo, deleteTodo }: TodoItem) => (
         aria-label="Delete"
         className="invisible group-hover:visible"
       >
-        <HiTrash className="h-5 w-5 text-red-400" />
+        <HiTrash className="h-5 w-5 text-slate-200 hover:text-red-400" />
       </button>
     </div>
   </li>
