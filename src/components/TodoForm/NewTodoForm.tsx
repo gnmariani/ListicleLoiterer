@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FormEvent } from "react";
 
 export const NewTodoForm = ({
@@ -6,6 +6,8 @@ export const NewTodoForm = ({
 }: {
   newTask: (name: FormDataEntryValue | null) => void;
 }) => {
+  const [isFormInValid, setIsFormInValid] = useState<boolean | undefined>(true);
+
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -13,8 +15,11 @@ export const NewTodoForm = ({
     const formData = new FormData(event.currentTarget);
     const task = formData.get("task");
     newTask(task);
+    // Reset Form and Submit button
     formRef.current?.reset();
+    setIsFormInValid(true);
   };
+
   return (
     <form
       ref={formRef}
@@ -26,6 +31,7 @@ export const NewTodoForm = ({
           Please type in the task to be completed
         </label>
         <input
+          onChange={() => setIsFormInValid(!formRef.current?.checkValidity())}
           id="task"
           name="task"
           type="text"
@@ -35,6 +41,7 @@ export const NewTodoForm = ({
         />
       </div>
       <button
+        disabled={isFormInValid}
         type="submit"
         className="min-w-[128px] rounded border border-red-600 bg-red-500 px-2 text-base font-medium leading-10 text-white hover:bg-red-600 focus-visible:outline-2  focus-visible:outline-offset-4 focus-visible:outline-blue-300 disabled:border-transparent disabled:bg-gray-200"
       >
