@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { FormEvent } from "react";
+import { HiOutlineXCircle } from "react-icons/hi2";
 
 export const NewTodoForm = ({
   newTask,
@@ -24,21 +25,33 @@ export const NewTodoForm = ({
     <form
       ref={formRef}
       onSubmit={onFormSubmit}
+      onReset={() => setIsFormInValid(true)}
       className="flex flex-col space-y-2 rounded-xl border border-stone-200 bg-stone-50 p-4 sm:flex-row sm:space-x-2 sm:space-y-0"
     >
       <div className="relative w-full">
         <label className="sr-only" htmlFor="task">
           Please type in the task to be completed
         </label>
-        <input
-          onChange={() => setIsFormInValid(!formRef.current?.checkValidity())}
-          id="task"
-          name="task"
-          type="text"
-          required
-          placeholder="Add a task"
-          className="w-full rounded border border-stone-200 bg-white px-4 py-3 text-base transition-opacity focus:border-red-300 focus:ring-1 focus:ring-red-300 focus-visible:outline-none disabled:opacity-50"
-        />
+        <div className="flex items-center justify-between rounded border border-stone-200 bg-white pr-4 text-base focus-within:border-red-300 focus-within:ring-1 focus-within:ring-red-300">
+          <input
+            required
+            id="task"
+            name="task"
+            type="text"
+            placeholder="Add a task"
+            onChange={() => setIsFormInValid(!formRef.current?.checkValidity())}
+            className="w-full py-3 pl-4 transition-opacity focus-visible:outline-none "
+          />
+          {!isFormInValid && (
+            <button
+              aria-label="Clear form"
+              onClick={() => formRef.current?.reset()}
+              className="rounded-full focus:outline-none focus-visible:ring focus-visible:ring-red-300 focus-visible:ring-offset-1"
+            >
+              <HiOutlineXCircle className="h-5 w-5 text-slate-500 hover:text-red-400" />
+            </button>
+          )}
+        </div>
       </div>
       <button
         disabled={isFormInValid}
